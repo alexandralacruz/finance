@@ -1,0 +1,28 @@
+{
+    "transactions": [
+      {
+        "date": "2025-06-24 15:00",
+        "type": "income",
+        "amount": 2000.00,
+        "currency": "USD",
+        "category": "salary",
+        "converted_amount": 2000.00
+      },
+      {
+        "date": "2025-06-24 14:30",
+        "type": "expense",
+        "amount": 150.50,
+        "currency": "EUR",
+        "category": "groceries",
+        "converted_amount": 160.83
+      },
+      {
+        "date": "2025-06-23 10:15",
+        "type": "investment",
+        "amount": 500.00,
+        "currency": "GBP",
+        "category": "stocks",
+        "converted_amount": 635.00
+      }
+    ]
+  }

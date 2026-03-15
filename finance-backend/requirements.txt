@@ -1,0 +1,17 @@
+pandas
+numpy
+matplotlib
+seaborn
+openpyxl
+xlrd
+notebook
+scikit-learn
+streamlit
+pymysql
+dash
+yfinance
+fastapi
+uvicorn
+requests
+python-dotenv
+
