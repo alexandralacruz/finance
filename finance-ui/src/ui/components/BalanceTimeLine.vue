@@ -85,19 +85,18 @@
     }
     </script>
     
-    <template>
-      <div class="card timeline-card">
-        <h3>Evolución mensual</h3>
-    
-        <div v-if="props.loading">Cargando…</div>
-        <div v-else-if="!props.monthlyBalances.length">Sin datos</div>
-    
-        <div class="chart-wrapper" v-else>
-          <!-- con reactive, NO .value -->
-          <LineChart :chart-data="chartData" :chart-options="chartOptions" />
-        </div>
-      </div>
-    </template>
+   <template>
+  <div class="chart-card timeline-card">
+    <h3 class="card-title">Evolución mensual</h3>
+
+    <div v-if="props.loading">Cargando…</div>
+    <div v-else-if="!props.monthlyBalances.length">Sin datos</div>
+
+    <div class="chart-wrapper" v-else>
+      <LineChart :chart-data="chartData" :chart-options="chartOptions" />
+    </div>
+  </div>
+</template>
     
 
     <style scoped>
@@ -105,16 +104,28 @@
           display: flex;
           flex-direction: column;
           height: 100%; /* ocupar todo el alto del padre */
+          padding: 20px;
+
         }
 
         .chart-wrapper {
           flex: 1;      /* ocupa todo el espacio disponible dentro del card */
           width: 100%;
         }
+       .card-title {
+        margin-top: 0;
+        margin-bottom: 8px;
+        line-height: 1.2;
+        }
        
         
         h3 {
           margin-bottom: 8px;
+        }
+        /* Título con margen contenido */
+       .entity-root > h3 {
+        margin: 0 0 8px;
+        line-height: 1.2;
         }
 </style>
         

@@ -25,6 +25,11 @@
           </div>
           <canvas ref="lineChart"></canvas>
         </div>
+
+        <div class="chart-card">
+            <h3>Saldo por Entidad</h3>
+            <h3>Evolución del Saldo</h3>
+        </div>
   
         <!-- Puedes agregar aquí los otros 2 del grid 2x2 más adelante -->
       </div>
@@ -159,8 +164,11 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     flex-direction: column;
     height: 420px;
+    
   }
   
   .chart-card h3 {

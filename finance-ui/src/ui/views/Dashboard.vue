@@ -269,7 +269,7 @@ font-size: 16px;
 }
 
 .chart-card h3 {
-  margin: 0 0 15px 0;
+  margin: 0 0 8px 0;
   flex-shrink: 0;
 }
 
@@ -331,6 +331,13 @@ th {
 .year-selector {
 margin-top: 4px;
 font-size: 13px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas */
+  gap: 20px;
+  padding: 20px;
 }
 
 .year-selector select {

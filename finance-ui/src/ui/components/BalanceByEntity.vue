@@ -36,7 +36,7 @@
     
 <template>
         <div class="chart-card">
-          <h3>Saldo por Entidad</h3>
+          <h3 class="card-title">Saldo por Entidad</h3>
       
           <div class="chart-wrapper">
             <BarChart
@@ -99,6 +99,10 @@
     /*.chart-wrapper canvas {
       height: 100%;
       display: block;
+    }
+    .card-title {
+    margin: 0 0 8px 0;
+    line-height: 1.2;
     }
     */
     /* Opcional: tarjeta visual */
