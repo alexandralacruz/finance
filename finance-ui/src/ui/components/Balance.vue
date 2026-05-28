@@ -48,7 +48,7 @@
     loadingEntities.value = true
   
     try {
-        const url = `${API_URL}/byEntity/${props.year}?currency=${props.currency}&usd_to_cop=${props.rate}`
+        const url = `${API_URL}/byEntity/${props.year}?currency=${props.currency}`
         console.log('Fetching URL:', url)
         
         const res = await fetch(url)
@@ -76,7 +76,7 @@
 
   try {
     const res = await fetch(
-      `${API_URL}/byMonth/${props.year}?currency=${props.currency}&usd_to_cop=${props.rate}`
+      `${API_URL}/byMonth/${props.year}?currency=${props.currency}`
     )
     const data = await res.json()
     //console.log('------------------------------Balance by Month data:', data) 

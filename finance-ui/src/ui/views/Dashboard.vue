@@ -1,349 +1,243 @@
 <template>
-  <div class="dashboard">
-    <Header
-      v-model="selectedYear"
-      :rate="rate"
-      :rateDate="rateDate"
-      :loading="loading"
-      :years="availableYears"
-      :currency="balanceCurrency"
-      @update:currency="updateCurrency"
-      @refresh="fetchExchangeRate"
-    />
+  <div class="p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <p class="text-sm text-gray-500">Resumen financiero consolidado</p>
+      </div>
 
+      <div class="flex items-center gap-4">
+        <!-- Currency toggle -->
+        <div class="flex bg-gray-200 rounded-lg p-0.5">
+          <button
+            v-for="c in ['USD', 'COP']"
+            :key="c"
+            @click="currency = c"
+            class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
+            :class="currency === c ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-600 hover:text-gray-800'"
+          >{{ c }}</button>
+        </div>
 
-    <Summary 
-      :summary="summary" 
-      :loading="loadingSummary"
-      :currency="balanceCurrency"
-    />
-    
-    <Balance
-      :year="selectedYear"
-      :currency="balanceCurrency"
-      :rate="rate"
-        />
-    
+        <!-- Year selector -->
+        <select
+          v-model="selectedYear"
+          class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+        </select>
+
+        <!-- Exchange rate -->
+        <span class="text-sm text-gray-500 bg-white rounded-lg px-3 py-1.5 border border-gray-200">
+          💱 {{ rateLabel }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div v-if="loading" class="flex items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600"></div>
+    </div>
+
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div class="glass-card rounded-2xl p-6">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Saldo Total</p>
+        <p class="text-2xl font-bold text-blue-700">{{ fmt(summary.totalBalance) }}</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Entidades Activas</p>
+        <p class="text-2xl font-bold text-gray-700">{{ summary.entities }}</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ingresos del año</p>
+        <p class="text-2xl font-bold text-green-600">{{ fmt(summary.income) }}</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Egresos del año</p>
+        <p class="text-2xl font-bold text-red-500">{{ fmt(summary.expenses) }}</p>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <!-- Entity balances -->
+      <div class="glass-card rounded-2xl p-6">
+        <h3 class="text-sm font-semibold text-gray-600 mb-4">Saldo por Entidad</h3>
+        <div v-if="entities.length" class="space-y-3">
+          <div v-for="e in entities" :key="e.name" class="flex justify-between items-center">
+            <span class="text-sm text-gray-700 font-medium">{{ e.name }}</span>
+            <span class="text-sm font-bold" :class="e.balance >= 0 ? 'text-green-600' : 'text-red-500'">
+              {{ fmt(e.balance) }}
+            </span>
+          </div>
+        </div>
+        <p v-else class="text-sm text-gray-400">Sin datos</p>
+      </div>
+
+      <!-- Monthly timeline -->
+      <div class="glass-card rounded-2xl p-6 lg:col-span-2">
+        <h3 class="text-sm font-semibold text-gray-600 mb-4">Evolución Mensual</h3>
+        <div v-if="monthly.length" class="h-64">
+          <LineChart :chart-data="chartData" :chart-options="chartOptions" />
+        </div>
+        <p v-else class="text-sm text-gray-400">Sin datos</p>
+      </div>
+    </div>
+
+    <!-- Entity quick list -->
+    <div class="glass-card rounded-2xl p-6">
+      <h3 class="text-sm font-semibold text-gray-600 mb-4">Resumen por Entidad</h3>
+      <div v-if="entityBalances.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <router-link
+          v-for="eb in entityBalances"
+          :key="eb.ENTIDAD"
+          :to="`/entity/${eb.ENTIDAD}`"
+          class="flex justify-between items-center p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 transition-colors"
+        >
+          <span class="font-medium text-gray-700">{{ eb.ENTIDAD }}</span>
+          <span class="font-bold text-sm" :class="eb.BALANCE_FINAL >= 0 ? 'text-green-600' : 'text-red-500'">
+            {{ fmt(eb.BALANCE_FINAL) }}
+          </span>
+        </router-link>
+      </div>
+      <p v-else class="text-sm text-gray-400">Sin entidades con datos para {{ selectedYear }}</p>
+    </div>
   </div>
 </template>
 
 <script setup>
-
-import { ref, onMounted, watch } from 'vue'
-import Header from '../components/Header.vue'
-import Summary from '../components/Summary.vue'
-import Balance from '../components/Balance.vue'
-
+import { ref, computed, watch, onMounted } from 'vue'
+import LineChart from '../components/charts/LineChart.vue'
 
 const API_URL = import.meta.env.VITE_API_URL
 
-//const balanceByEntity = ref([])
-const balanceCurrency = ref('USD')
-
-const rate = ref(0)
-const rateDate = ref('')
+const currency = ref('USD')
+const selectedYear = ref(new Date().getFullYear())
+const years = ref([])
+const rate = ref(4000)
 const loading = ref(false)
+const summary = ref({ totalBalance: 0, entities: 0, income: 0, expenses: 0 })
+const entities = ref([])
+const monthly = ref([])
+const entityBalances = ref([])
 
-const currentYear = new Date().getFullYear()
-const selectedYear = ref(currentYear)
-const availableYears = ref([])
+const MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
 
-//const activeMenu = ref('upload')
-const hasData = ref(false)
-const summary = ref({
-  totalBalance: 0,
-  activeEntities: 0,
-  monthlyIncome: 0,
-  monthlyExpenses: 0
+const rateLabel = computed(() => {
+  return `1 USD = ${rate.value.toLocaleString()} COP`
 })
 
-const fetchExchangeRate = async () => {
-  loading.value = true
-  const res = await fetch(`${API_URL}/exchange-rate`)
-  const data = await res.json()
-  rate.value = data.rate
-  rateDate.value = data.date
-  loading.value = false
+const fmt = (v) => {
+  if (v == null) return '$0'
+  return new Intl.NumberFormat('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)
 }
 
-const fetchYears = async () => {
-  const res = await fetch(`${API_URL}/years`)
-  const data = await res.json()
-  availableYears.value = data.years
+// Chart data
+const chartData = computed(() => ({
+  labels: monthly.value.map(m => MONTHS[Number(m.MES.split('-')[1]) - 1] || ''),
+  datasets: [
+    {
+      label: `Saldo (${currency.value})`,
+      data: monthly.value.map(m => m.total_balance),
+      borderColor: '#2563EB',
+      borderWidth: 3,
+      tension: 0.3,
+      fill: false,
+    },
+    {
+      label: 'Ingresos',
+      data: monthly.value.map(m => m.income),
+      borderColor: '#16A34A',
+      borderDash: [5, 5],
+      tension: 0.3,
+      fill: false,
+    },
+    {
+      label: 'Gastos',
+      data: monthly.value.map(m => m.expenses),
+      borderColor: '#DC2626',
+      borderDash: [5, 5],
+      tension: 0.3,
+      fill: false,
+    },
+  ]
+}))
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'bottom' },
+  },
+  scales: {
+    y: { beginAtZero: true },
+  },
 }
 
-
-
-const loadingSummary = ref(false)
-
-async function fetchSummary(year, currency = 'USD') {
-  loadingSummary.value = true
-
+async function fetchRate() {
   try {
-    const res = await fetch(`${API_URL}/summary/${year}?currency=${currency}&usd_to_cop=${rate.value}`)
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+    const res = await fetch(`${API_URL}/exchange-rate?target=USD`)
     const data = await res.json()
+    // exchangerate-api returns COP→USD; invert to USD→COP
+    rate.value = Math.round(1 / data.rate)
+  } catch (e) {
+    console.error('Rate error:', e)
+  }
+}
 
-    // Si tu API devuelve algo tipo { hasData: true, totalBalance: 123, ... }
-    hasData.value = data.hasData ?? false
-    summary.value = {
-      totalBalance: data.totalBalance ?? 0,
-      activeEntities: data.entities ?? 0,
-      monthlyIncome: data.income ?? 0,
-      monthlyExpenses: data.expenses ?? 0
+async function fetchYears() {
+  try {
+    const res = await fetch(`${API_URL}/years`)
+    const data = await res.json()
+    years.value = Array.isArray(data.years) ? data.years : [selectedYear.value]
+  } catch (e) {
+    years.value = [selectedYear.value]
+  }
+}
+
+async function fetchAll() {
+  loading.value = true
+  try {
+    const [sumRes, entRes, monRes] = await Promise.all([
+      fetch(`${API_URL}/summary/${selectedYear.value}?currency=${currency.value}`),
+      fetch(`${API_URL}/byEntity/${selectedYear.value}?currency=${currency.value}`),
+      fetch(`${API_URL}/byMonth/${selectedYear.value}?currency=${currency.value}`),
+    ])
+
+    if (sumRes.ok) {
+      const data = await sumRes.json()
+      summary.value = {
+        totalBalance: data.totalBalance || 0,
+        entities: data.entities || 0,
+        income: data.income || 0,
+        expenses: data.expenses || 0,
+      }
+      entityBalances.value = data.entityBalances || []
     }
-  } catch (err) {
-    console.error("Error fetching summary:", err)
-    hasData.value = false
-    summary.value = {
-      totalBalance: 0,
-      activeEntities: 0,
-      monthlyIncome: 0,
-      monthlyExpenses: 0
+
+    if (entRes.ok) {
+      const data = await entRes.json()
+      entities.value = (data.entities || []).map(e => ({
+        name: e.ENTIDAD,
+        balance: e.BALANCE_FINAL,
+      }))
     }
+
+    if (monRes.ok) {
+      monthly.value = await monRes.json()
+    }
+  } catch (e) {
+    console.error('Fetch error:', e)
   } finally {
-    loadingSummary.value = false
+    loading.value = false
   }
 }
 
-function updateCurrency(newCurrency) {
-  balanceCurrency.value = newCurrency
-}
-
-// Observa cambios en el año
-
-watch(
-  [selectedYear, balanceCurrency],
-  ([year, currency]) => {
-    fetchSummary(year, currency)
-  }
-)
-
-// Al cargar
-onMounted(() => {
-  fetchExchangeRate()
-  fetchYears()
-  fetchSummary(selectedYear.value, balanceCurrency.value)
-  
-  
+onMounted(async () => {
+  await fetchRate()
+  await fetchYears()
+  await fetchAll()
 })
 
+watch([selectedYear, currency], () => fetchAll())
 </script>
-
-
-<style scoped>
-.dashboard {
-  font-family: Arial, sans-serif;
-  background: #f0f2f5;
-  min-height: 100vh;
-}
-
-.header {
-  background: #e9ecef;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.summary {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  text-align: center;
-  min-width: 200px;
-  flex: 1;
-}
-
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #666;
-}
-
-.card p {
-  font-size: 24px;
-  margin: 0;
-  font-weight: bold;
-}
-
-.main-content {
-  display: flex;
-}
-
-
-
-.empty-state {
-background: white;
-padding: 40px;
-border-radius: 8px;
-text-align: center;
-color: #666;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.empty-state.big {
-margin-top: 40px;
-font-size: 18px;
-}
-
-.year-selector select {
-margin-left: 8px;
-padding: 4px 8px;
-}
-
-.sidebar {
-width: 220px;
-background: linear-gradient(180deg, #1f2933, #111827);
-color: #e5e7eb;
-padding: 20px 15px;
-min-height: calc(100vh - 60px); /* descuenta el header */
-box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
-}
-
-.sidebar ul {
-list-style: none;
-padding: 0;
-margin: 0;
-}
-
-.sidebar li {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 12px 14px;
-margin-bottom: 6px;
-border-radius: 8px;
-cursor: pointer;
-font-size: 14px;
-transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.sidebar li:hover {
-background: rgba(255, 255, 255, 0.08);
-transform: translateX(4px);
-}
-
-.sidebar li.active {
-background: rgba(59, 130, 246, 0.2);
-color: #93c5fd;
-font-weight: 600;
-}
-
-.sidebar li span {
-font-size: 16px;
-}
-
-
-.content {
-  flex: 1;
-  padding: 20px;
-}
-
-.charts-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.chart-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  flex: 1;
-  height: 380px;                /* Altura fija - ¡esto soluciona el estiramiento infinito! */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chart-card h3 {
-  margin: 0 0 8px 0;
-  flex-shrink: 0;
-}
-
-.filters {
-  margin-bottom: 10px;
-  font-size: 14px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-
-.table-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.table-filters {
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-}
-
-th {
-  background: #f8f9fa;
-}
-
-/* El canvas del gráfico ocupa todo el espacio disponible */
-.chart-card :deep(canvas) {
-  flex: 1 !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-  .charts-row {
-    flex-direction: column;
-  }
-  .chart-card {
-    height: 300px;
-  }
-}
-
-.year-selector {
-margin-top: 4px;
-font-size: 13px;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* dos columnas */
-  gap: 20px;
-  padding: 20px;
-}
-
-.year-selector select {
-margin-left: 6px;
-padding: 4px 8px;
-border-radius: 6px;
-border: 1px solid #ccc;
-}
-</style>

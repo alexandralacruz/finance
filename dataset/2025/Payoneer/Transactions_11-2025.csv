@@ -1,0 +1,2 @@
+﻿Transaction Date,Transaction Time,Time Zone,Transaction ID,Description,Credit Amount,Debit Amount,Currency,Transfer Amount,Transfer Amount Currency,Status,Running Balance,Additional Description,Store Name,Source,Target,Reference ID
+11/10/2025,15:16:41,UTC,911897283,Payment from Jala University,588.00,,USD,588.00,USD,Completed,1226.37,PrCT-FS25-M2-C1to6 8W SPA - A. La Cruz,,Jala University,USD balance,

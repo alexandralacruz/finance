@@ -27,7 +27,7 @@
         tooltip: {
           callbacks: {
             label: ctx =>
-              `${ctx.raw.toLocaleString()} ${props.currency}`
+              `${ctx.raw.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${props.currency}`
           }
         }
       }

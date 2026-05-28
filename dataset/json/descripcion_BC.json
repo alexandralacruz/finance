@@ -1,0 +1,69 @@
+{
+    "supermercado": {
+        "descripcion": "Compras en supermercados",
+        "lista": [
+            "COMPRA EN  SUPERMERCA",
+            "COMPRA EN  TIENDA D1",
+            "COMPRA EN  EXITO WOW",
+            "COMPRA EN  JHON PEZ F",
+            "COMPRA EN  SURTIPLAZA",
+            "COMPRA EN  METRO IBAG",
+            "COMPRA EN  SUPERTIEND",
+            "SUPERMERCADO"
+        ]
+    },
+    "entretenimiento" : {
+        "descripcion": "Gastos en entretenimiento, restaurantes, bares, cine, cafes, etc",
+        "lista": [
+            "COMPRA EN  BOLD",
+            "COMPRA EN  FUENTE DE",
+            "COMPRA EN  IGSA HL S",
+            "COMPRA EN  PIPE PARRI",
+            "COMPRA EN  TENAMPA PA",
+            "COMPRA EN  TOSTAO CAF"
+        ]
+    },
+    "pago_tc" : {
+        "descripcion": "Pagos en tarjetas de crédito en pesoso o en dolares convertidos a la tasa del día",
+        "lista": [
+            "PAGO AUTOM TC MASTER", "PAGO SUC VIRT TC MASTER"
+        ]
+    },
+    "transferencia" : {
+        "descripcion": "Transferencias entre cuentas propias o de terceros, nequi, etc",
+        "lista": [
+            "TRANSFERENCIA", "TRASLADO VIRTUAL OTROS BANCOS"
+        ]
+    },
+    "retiro" : {
+        "descripcion": "Retiros de efectivo en cajeros",
+        "lista": ["RETIRO CAJERO"]
+    },
+    "servicios" : {
+        "descripcion": "Pagos de servicios públicos, internet, telefonía, etc",
+        "lista": ["PAGO PSE COMUNICACION CELULAR",
+        "ALCANOS DE COLOMBIA",
+        "IBAL S.A. ESP",
+        "CELSIA",
+        "COMPRA INTL  PAYPAL  DISNEYPLU"]
+    },
+    "medicamentos" : {
+        "descripcion": "Gastos en medicamentos, farmacias, etc",
+        "lista": ["COMPRA EN  DROG"]
+    },
+    "ingresos" : {
+        "descripcion": "Ingresos de nómina, transferencias, etc",
+        "lista": ["PAGO DE NOMI UNIV DE IBAGUE"]
+    },
+    "intereses" : {
+        "descripcion": "abono de intereses",
+        "lista": ["ABONO INTERESES AHORROS",
+        "AJUSTE INTERES AHORROS DB",
+        "IVA COMIS TRASLADO OTROS BCOS",
+        "COMISION TRASLADO OTROS BANCOS"]
+    },
+    "inversiones": {
+        "descripcion": "Inversiones en acciones, fondos, etc",
+        "lista": ["PAGO PSE MOVII SA"]
+    }
+}

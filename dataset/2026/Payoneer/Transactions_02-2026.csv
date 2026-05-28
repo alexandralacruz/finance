@@ -1,0 +1,8 @@
+﻿Transaction Date,Transaction Time,Time Zone,Transaction ID,Description,Credit Amount,Debit Amount,Currency,Transfer Amount,Transfer Amount Currency,Status,Running Balance,Additional Description,Store Name,Source,Target,Reference ID
+02/23/2026,11:34:18,UTC,973638187,Card charge (JUMBO EL VERGEL),,27.75,USD,,,Completed,554.51,,,USD balance,JUMBO EL VERGEL,
+02/23/2026,11:34:18,UTC,973638231,Card charge (TIENDA TU HOGAR ONLINE),,23.22,USD,,,Completed,582.26,,,USD balance,TIENDA TU HOGAR ONLINE,
+02/18/2026,09:12:59,UTC,972324028,Card charge (SUPERMERCADO MERCACENT),,7.85,USD,,,Completed,605.48,,,USD balance,SUPERMERCADO MERCACENT,
+02/16/2026,09:16:35,UTC,971754987,Card charge (HOMECENTER),,103.00,USD,,,Completed,613.33,,,USD balance,HOMECENTER,
+02/16/2026,09:16:35,UTC,971755025,Card charge (HOMECENTER),,83.07,USD,,,Completed,716.33,,,USD balance,HOMECENTER,
+02/01/2026,09:19:28,UTC,967486877,Card charge (TIENDA D1 IBAGUE BARLO),,14.77,USD,,,Completed,799.40,,,USD balance,TIENDA D1 IBAGUE BARLO,
+02/01/2026,09:15:01,UTC,967479189,Card charge (JUMBO EL VERGEL),,62.58,USD,,,Completed,814.17,,,USD balance,JUMBO EL VERGEL,

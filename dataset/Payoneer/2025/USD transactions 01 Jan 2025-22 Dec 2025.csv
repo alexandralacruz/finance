@@ -1,0 +1,18 @@
+Currency,Payout method,Transaction date,Transaction time,Time zone,Credit amount,Debit amount,Status,Running balance,Description
+USD,USD balance,11-10-2025,15:16:41,UTC,588,0,Completed,1226.37,Payment from Jala University
+USD,USD balance,10-13-2025,09:29:59,UTC,0,-30.82,Completed,736.6,Card charge (SURTIPLAZA ACQUA)
+USD,USD balance,10-13-2025,09:29:59,UTC,0,-45.12,Completed,691.48,Card charge (PATPRIMO 227 IBAGUE MU)
+USD,USD balance,10-13-2025,09:29:59,UTC,0,-15.92,Completed,767.42,Card charge (ESPRIT)
+USD,USD balance,10-13-2025,09:29:59,UTC,0,-53.11,Completed,638.37,Card charge (FALABELLA TDA DPTO ACQ)
+USD,USD balance,10-12-2025,09:34:39,UTC,0,-28.94,Completed,783.34,Card charge (BOLD*MIS CARNES PARR)
+USD,USD balance,10-12-2025,08:10:12,UTC,0,-44.24,Completed,812.28,Card charge (RESTAURANTE DONDE CHUC)
+USD,USD balance,10-05-2025,09:09:06,UTC,0,-9.6,Completed,856.52,Card charge (SUPERMERCADO POPULAR 1)
+USD,USD balance,10-05-2025,09:04:46,UTC,0,-82.32,Completed,866.12,Card charge (FALABELLA TDA DPTO ACQ)
+USD,USD balance,10-05-2025,09:04:46,UTC,0,-17.93,Completed,1040.95,Card charge (SURTIPLAZA ACQUA)
+USD,USD balance,10-05-2025,09:04:46,UTC,0,-64,Completed,948.44,Card charge (JOYERIA CAREY)
+USD,USD balance,10-05-2025,09:04:46,UTC,0,-28.51,Completed,1012.44,Card charge (METRO IBAGUE)
+USD,USD balance,10-02-2025,09:47:15,UTC,0,-17.53,Completed,1058.88,Card charge (SUPERMERCADO POPULAR 1)
+USD,USD balance,10-02-2025,02:45:48,UTC,0,-69.64,Completed,1076.41,ATM withdrawal (BANCOLOMBIA)
+USD,USD balance,08-07-2025,09:30:12,UTC,0,-29.95,Completed,1146.05,Annual card fee
+USD,USD balance,07-07-2025,14:08:37,UTC,588,0,Completed,1176,Payment from Jala University
+USD,USD balance,05-14-2025,21:53:04,UTC,588,0,Completed,588,Payment from Jala University

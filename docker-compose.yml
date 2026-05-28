@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./finance-backend
+      dockerfile: Dockerfile
+    container_name: finance-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist the SQLite database + dataset files outside the container
+      - backend_data:/app/data
+      - ./dataset:/app/dataset
+    environment:
+      - DATASET_ROOT_PATH=/app/dataset
+      - DB_PATH=/app/data/finance.db
+      - EXCHANGERATE_API_KEY=${EXCHANGERATE_API_KEY:-34cb491d8aea05377911d4c4}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/years')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./finance-ui
+      dockerfile: Dockerfile
+    container_name: finance-ui
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  backend_data:
+    driver: local

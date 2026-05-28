@@ -1,4 +1,5 @@
 <template>
+  
   <div class="summary-wrapper">
     <!-- Loading state elegante -->
     <div v-if="loading" class="loading-state">
@@ -11,6 +12,7 @@
       <div class="empty-icon">📊</div>
       <p class="empty-title">Sin datos</p>
       <p class="empty-subtitle">No hay información para este período</p>
+      
     </div>
 
     <!-- Cards principales -->
@@ -72,8 +74,8 @@ const props = defineProps({
 const formatCurrency = (value) => {
   if (!value && value !== 0) return '$0'
   return new Intl.NumberFormat('es-CO', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(value)
 }
 </script>

@@ -1,0 +1,2 @@
+﻿Transaction Date,Transaction Time,Time Zone,Transaction ID,Description,Credit Amount,Debit Amount,Currency,Transfer Amount,Transfer Amount Currency,Status,Running Balance,Additional Description,Store Name,Source,Target,Reference ID
+08/07/2025,09:30:12,UTC,4366185148659603,Annual card fee,,29.95,USD,,,Completed,1146.05,Annual card fee,,USD balance,Payoneer,
